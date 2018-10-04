@@ -1,3 +1,5 @@
+import React from 'react';
+
 const BUTTON_WIDTH = 50;
 const Operations = {
 	Plus: '+',
@@ -73,75 +75,76 @@ class Calculator extends React.Component {
 	}
 
 	render() {
-		const { display, operation } = this.state;
+		const { handleClick, handleOperationClick, clear, state } = this;
+		const { display, operation } = state;
+
 		return (
 			<React.Fragment>
 				<Display value={display} />
-				<div style={{ width: '500px', height: '700px' }}>
-					<div>
-						<Button onClick={this.handleClick} label={1} />
-						<Button onClick={this.handleClick} label={2} />
-						<Button onClick={this.handleClick} label={3} />
-						<Button highlighted={operation === Operations.Plus} onClick={this.handleOperationClick} label={Operations.Plus} />
-					</div>
-					<div>
-						<Button onClick={this.handleClick} label={4} />
-						<Button onClick={this.handleClick} label={5} />
-						<Button onClick={this.handleClick} label={6} />
-						<Button highlighted={operation === Operations.Minus} onClick={this.handleOperationClick} label={Operations.Minus} />
-					</div>
-					<div>
-						<Button onClick={this.handleClick} label={7} />
-						<Button onClick={this.handleClick} label={8} />
-						<Button onClick={this.handleClick} label={9} />
-						<Button highlighted={operation === Operations.Multiply} onClick={this.handleOperationClick} label={Operations.Multiply} />
-					</div>
-					<div>
-						<Button onClick={this.clear} label={Operations.Clear} />
-						<Button onClick={this.handleClick} label={0} />
-						<Button onClick={this.handleClick} label='.' disabled={display.indexOf('.') > -1} />
-						<Button highlighted={operation === Operations.Divide} onClick={this.handleOperationClick} label={Operations.Divide} />
-					</div>
-					<div>
-						<Button highlighted={operation === Operations.Equals} onClick={this.handleOperationClick} label={Operations.Equals} />
-					</div>
-				</div>
+				<KeyPad
+					display={display}
+					operation={operation}
+					handleClick={handleClick}
+					handleOperationClick={handleOperationClick}
+					clear={clear}
+				/>
 			</React.Fragment>
 		);
 	}
 }
 
-class Button extends React.Component {
-	render() {
-		const { label, onClick, float, disabled, highlighted } = this.props;
-		if (label === undefined) {
-			return <div style={{
-				width: BUTTON_WIDTH + 'px',
-				height: BUTTON_WIDTH + 'px',
-				float
-			}}></div>;
-		}
+const KeyPad = ({ display, operation, handleClick, handleOperationClick, clear }) => (
+	<div style={{ width: '500px', height: '700px' }}>
+		<div>
+			<Button onClick={handleClick} label={1} />
+			<Button onClick={handleClick} label={2} />
+			<Button onClick={handleClick} label={3} />
+			<Button highlighted={operation === Operations.Plus} onClick={handleOperationClick} label={Operations.Plus} />
+		</div>
+		<div>
+			<Button onClick={handleClick} label={4} />
+			<Button onClick={handleClick} label={5} />
+			<Button onClick={handleClick} label={6} />
+			<Button highlighted={operation === Operations.Minus} onClick={handleOperationClick} label={Operations.Minus} />
+		</div>
+		<div>
+			<Button onClick={handleClick} label={7} />
+			<Button onClick={handleClick} label={8} />
+			<Button onClick={handleClick} label={9} />
+			<Button highlighted={operation === Operations.Multiply} onClick={handleOperationClick} label={Operations.Multiply} />
+		</div>
+		<div>
+			<Button onClick={clear} label={Operations.Clear} />
+			<Button onClick={handleClick} label={0} />
+			<Button onClick={handleClick} label='.' disabled={display.indexOf('.') > -1} />
+			<Button highlighted={operation === Operations.Divide} onClick={handleOperationClick} label={Operations.Divide} />
+		</div>
+		<div>
+			<Button onClick={handleOperationClick} label={Operations.Equals} />
+		</div>
+	</div>
+)
 
-		let style = {
-			width: BUTTON_WIDTH,
-			height: BUTTON_WIDTH,
-		}
-
-		if (highlighted) {
-			style.backgroundColor = 'grey';
-			style.fontWeight = 'bold';
-		}
-
-		return (
-			<button
-				onClick={() => onClick(label)}
-				style={style}
-				disabled={disabled === true}
-			>
-				{label}
-			</button>
-		);
+const Button = ({ label, onClick, float, disabled, highlighted }) => {
+	let style = {
+		width: BUTTON_WIDTH,
+		height: BUTTON_WIDTH,
 	}
+
+	if (highlighted) {
+		style.backgroundColor = 'grey';
+		style.fontWeight = 'bold';
+	}
+
+	return (
+		<button
+			onClick={() => onClick(label)}
+			style={style}
+			disabled={disabled === true}
+		>
+			{label}
+		</button>
+	);
 }
 
 const Display = ({ value }) => (
